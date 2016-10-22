@@ -46,14 +46,12 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:hint="password"
+
         android:layout_marginTop="10dp"
         android:inputType="textPassword"
         android:layout_width="@dimen/editText_horizontal_size"
         android:layout_height="wrap_content"
-
-        android:password="false"
         tools:password="false"
-        android:enabled="false"
         android:shadowColor="@color/colorPrimary"
         android:textCursorDrawable="@android:color/holo_orange_dark" />
     <Button
