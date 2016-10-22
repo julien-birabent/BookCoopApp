@@ -50,8 +50,12 @@
         android:inputType="textPassword"
         android:layout_width="@dimen/editText_horizontal_size"
         android:layout_height="wrap_content"
+
         android:password="false"
-        tools:password="false" />
+        tools:password="false"
+        android:enabled="false"
+        android:shadowColor="@color/colorPrimary"
+        android:textCursorDrawable="@android:color/holo_orange_dark" />
     <Button
         android:id="@+id/signinButton"
         android:layout_centerHorizontal="true"
@@ -62,6 +66,17 @@
         android:text="Go"
         android:textStyle="italic"
         android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/bookIconId"
+        android:src="@mipmap/ic_book"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signinTextId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp"
+        android:adjustViewBounds="true" />
 
 
 </RelativeLayout>
