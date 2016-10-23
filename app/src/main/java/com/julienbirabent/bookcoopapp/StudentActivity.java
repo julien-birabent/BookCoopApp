@@ -1,5 +1,6 @@
 package com.julienbirabent.bookcoopapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,8 +12,8 @@ import android.widget.Toast;
 
 public class StudentActivity extends AppCompatActivity {
 
-    public final String SCAN_TARGET = "ONE_D_MODE";
-    public final int REQUEST_CODE_SCAN = 0;
+    public final  int SCANNER_REQUEST_CODE=0;
+    public final String SCANNER_MODE = "ONE_D_MODE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,24 +27,31 @@ public class StudentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                intent.putExtra("SCAN_MODE", SCAN_TARGET);
-                intent.setPackage("com.google.zxing.client.android");
-                startActivityForResult(intent, REQUEST_CODE_SCAN);
+                intent.putExtra("SCAN_MODE", SCANNER_MODE);
+                startActivityForResult(intent, SCANNER_REQUEST_CODE);
 
             }
         });
     }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == REQUEST_CODE_SCAN) {
-            if (resultCode == RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+        if (requestCode == SCANNER_REQUEST_CODE) {
+            // Handle scan intent
+            if (resultCode == Activity.RESULT_OK) {
                 // Handle successful scan
-                Toast.makeText(getApplicationContext(), " ISBN :" + contents, Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
+                String contents = intent.getStringExtra("SCAN_RESULT");
+                String formatName = intent.getStringExtra("SCAN_RESULT_FORMAT");
+
+                Toast.makeText(getApplicationContext(), " ISBN : " + contents,Toast.LENGTH_LONG).show();
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Handle cancel
             }
+        } else {
+            // Handle other intents
         }
+
     }
 
 }
