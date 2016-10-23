@@ -1,7 +1,10 @@
 package com.julienbirabent.bookcoopapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -79,7 +82,13 @@ public class StudentActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(Book book) {
-            super.onPostExecute(book);
+
+            /*
+            Ici :
+            - ajouter le livre à la liste de livre de l'étudiant de session.
+
+             */
+
         }
         /*
 
@@ -87,7 +96,7 @@ public class StudentActivity extends AppCompatActivity {
          */
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+
         }
 
         /**
@@ -100,6 +109,23 @@ public class StudentActivity extends AppCompatActivity {
         protected Book doInBackground(String... params) {
             return null;
         }
+    }
+
+    /**
+     *  Check si la connection internet est présente et active.
+     * @return
+     */
+    private boolean checkInternetConnection() {
+
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
+
     }
 
     public ListView getBooksList() {
