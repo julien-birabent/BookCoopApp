@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BookCoopApp</string>
+    <string name="title_activity_student">StudentActivity</string>
 </resources>
