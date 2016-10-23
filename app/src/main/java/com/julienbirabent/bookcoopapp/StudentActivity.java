@@ -2,6 +2,7 @@ package com.julienbirabent.bookcoopapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,11 +12,15 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import model.Book;
+import model.Student;
+
 public class StudentActivity extends AppCompatActivity {
 
     public final  int SCANNER_REQUEST_CODE=0;
     public final String SCANNER_MODE = "ONE_D_MODE";
     private ListView booksList;
+    private Student sessionStudent;
 
 
 
@@ -40,6 +45,13 @@ public class StudentActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fonction appelée quand le scan est terminée.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == SCANNER_REQUEST_CODE) {
@@ -60,11 +72,49 @@ public class StudentActivity extends AppCompatActivity {
 
     }
 
+    private class PostBookTask extends AsyncTask<String,String,Book>{
+
+        /*
+       S'éxécute après que le travail est été fait.
+         */
+        @Override
+        protected void onPostExecute(Book book) {
+            super.onPostExecute(book);
+        }
+        /*
+
+         S'éxécute avant le lancement de la tâche de fond
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        /**
+         * Ici, faire les requêtes HTTP et parser les JSON reçu pour obtenir une variable de sorti
+         * conforme au modèle Book
+         * @param params
+         * @return
+         */
+        @Override
+        protected Book doInBackground(String... params) {
+            return null;
+        }
+    }
+
     public ListView getBooksList() {
         return booksList;
     }
 
     public void setBooksList(ListView booksList) {
         this.booksList = booksList;
+    }
+
+    public Student getSessionStudent() {
+        return sessionStudent;
+    }
+
+    public void setSessionStudent(Student sessionStudent) {
+        this.sessionStudent = sessionStudent;
     }
 }
