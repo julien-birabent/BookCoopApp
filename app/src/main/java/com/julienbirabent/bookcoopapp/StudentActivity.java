@@ -8,12 +8,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class StudentActivity extends AppCompatActivity {
 
     public final  int SCANNER_REQUEST_CODE=0;
     public final String SCANNER_MODE = "ONE_D_MODE";
+    private ListView booksList;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +25,8 @@ public class StudentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_student);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        booksList = (ListView) findViewById(R.id.listView_books);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -54,4 +60,11 @@ public class StudentActivity extends AppCompatActivity {
 
     }
 
+    public ListView getBooksList() {
+        return booksList;
+    }
+
+    public void setBooksList(ListView booksList) {
+        this.booksList = booksList;
+    }
 }

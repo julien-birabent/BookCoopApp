@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Julien on 22/10/2016.
  */
@@ -9,6 +11,7 @@ public class Student {
     private String email;
     private String password;
     private int phoneNumber;
+    private ArrayList<Book> booksList;
 
 
 
@@ -30,6 +33,15 @@ public class Student {
 
 
     }
+
+    public ArrayList<Book> getBooksList() {
+        return booksList;
+    }
+
+    public void setBooksList(ArrayList<Book> booksList) {
+        this.booksList = booksList;
+    }
+
     public String getEmail() {
         return email;
     }
