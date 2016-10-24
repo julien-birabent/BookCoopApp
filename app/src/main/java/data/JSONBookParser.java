@@ -1,5 +1,6 @@
 package data;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,7 +55,22 @@ public class JSONBookParser {
      */
     public ArrayList<Book> parseManyBooks(String contents){
 
-        return null;
+        ArrayList<Book> bookArrayList = new ArrayList<Book>();
+        try {
+            // on récupère le tableau JSON de Book
+            JSONArray booksArray = new JSONArray(contents);
+            // Pour chaque description de Book, on créé un Book physique
+            for(int i =0; i<booksArray.length();i++){
+                parseBook(booksArray.get(i).toString());
+            }
+
+            return bookArrayList;
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return bookArrayList;
     }
 
 }
