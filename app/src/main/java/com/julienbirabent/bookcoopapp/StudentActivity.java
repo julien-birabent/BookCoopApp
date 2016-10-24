@@ -41,7 +41,7 @@ public class StudentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         booksList = (ListView) findViewById(R.id.listView_books);
-        initializeBookList();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +61,24 @@ public class StudentActivity extends AppCompatActivity {
      */
     public void initializeBookList(){
 
+
+        // On récupère la liste de Book de l'étudiant sous forme de tableau 1D
         Book[] bookList = (Book[]) getSessionStudent().getBooksList().toArray();
+        // On définit un autre tableau 1D qui contiendra les String décrivant chaque Book
+        String[] bookStringList = new String[bookList.length];
+        // On initialise l'ArrayAdapter responsable de faire le lien entre nos données et la listView
+        bookListAdapter= new ArrayAdapter<String>(this, R.layout.book_item, bookStringList);
+        // chaque string décrivant un livre est ajouter à l'adapter.
+        for(int i =0 ; i < bookStringList.length;i++){
+            bookStringList[i] = bookList[i].toString();
+            bookListAdapter.add(bookStringList[i]);
+        }
+
+        // On donne le modèle de donnée à afficher à notre listview
+        booksList.setAdapter(bookListAdapter);
+
+
+
 
     }
 
@@ -167,6 +184,8 @@ public class StudentActivity extends AppCompatActivity {
             if(books!=null) {
                 getSessionStudent().setBooksList(books);
             }
+            // On affiche la liste
+            initializeBookList();
         }
     }
 
