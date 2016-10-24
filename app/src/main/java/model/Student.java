@@ -18,18 +18,21 @@ public class Student {
     public Student(){
         this.email = null;
         this.password = null;
+        this.booksList = new ArrayList<Book>();
 
     }
 
     public Student(String email, String password){
         this.email = email;
         this.password = password;
+        this.booksList = new ArrayList<Book>();
 
     }
 
     public Student(int phoneNumber, String password){
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.booksList = new ArrayList<Book>();
 
 
     }

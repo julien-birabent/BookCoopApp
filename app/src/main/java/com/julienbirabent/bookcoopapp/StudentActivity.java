@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -70,6 +69,8 @@ public class StudentActivity extends AppCompatActivity {
 
         // On récupère la liste de Book de l'étudiant sous forme de tableau 1D
         Book[] bookList = (Book[]) getSessionStudent().getBooksList().toArray();
+
+        
         // On définit un autre tableau 1D qui contiendra les String décrivant chaque Book
         String[] bookStringList = new String[bookList.length];
         // On initialise l'ArrayAdapter responsable de faire le lien entre nos données et la listView
