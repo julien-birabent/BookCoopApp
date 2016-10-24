@@ -71,14 +71,18 @@ public class StudentActivity extends AppCompatActivity {
         // chaque string décrivant un livre est ajouter à l'adapter.
         for(int i =0 ; i < bookStringList.length;i++){
             bookStringList[i] = bookList[i].toString();
-            bookListAdapter.add(bookStringList[i]);
+            getBookListAdapter().add(bookStringList[i]);
         }
 
         // On donne le modèle de donnée à afficher à notre listview
-        booksList.setAdapter(bookListAdapter);
+        getBooksList().setAdapter(getBookListAdapter());
+    }
 
+    public void addBookToListView(Book book){
 
-
+        if(getBookListAdapter()!=null){
+            getBookListAdapter().add(book.toString());
+        }
 
     }
 
@@ -151,7 +155,7 @@ public class StudentActivity extends AppCompatActivity {
             if(book!=null){
                 getSessionStudent().getBooksList().add(book);
                 // Ajouter le livre dans la liste de l'interface aussi
-                // *Code*
+                addBookToListView(book);
             }
 
         }
