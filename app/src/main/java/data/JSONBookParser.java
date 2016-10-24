@@ -24,7 +24,7 @@ public class JSONBookParser {
      * @param contents
      * @return
      */
-    public Book parseBook(String contents)
+    public static Book parseBook(String contents)
     {
         Book book = new Book();
 
@@ -53,7 +53,7 @@ public class JSONBookParser {
      * @param contents
      * @return
      */
-    public ArrayList<Book> parseManyBooks(String contents){
+    public static ArrayList<Book> parseManyBooks(String contents){
 
         ArrayList<Book> bookArrayList = new ArrayList<Book>();
         try {

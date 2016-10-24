@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import data.BookHttpClient;
+import data.JSONBookParser;
 import model.Book;
 import model.Student;
 
@@ -88,7 +89,7 @@ public class StudentActivity extends AppCompatActivity {
 
                     GetLastBookTask getLastBookTask = new GetLastBookTask();
                     // Les parametres de cet appel sont amenés à changer plus tard
-                    getLastBookTask.execute();
+                    getLastBookTask.execute(BookHttpClient.BASE_URL + BookHttpClient.GET_LAST_BOOK);
                 }
 
 
@@ -116,6 +117,11 @@ public class StudentActivity extends AppCompatActivity {
              * Ici on récupère le livre via BookHttpClient et on le convertit en objet physique
              * avec JSONBookParser.
              */
+            BookHttpClient bookHttpClient = new BookHttpClient();
+            String lastBook = bookHttpClient.getBookRessources(params[0]);
+
+            book = JSONBookParser.parseBook(lastBook);
+
             return book;
         }
 
@@ -140,8 +146,15 @@ public class StudentActivity extends AppCompatActivity {
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
 
+            ArrayList<Book> bookArrayList = new ArrayList<Book>();
 
-            return null;
+
+            BookHttpClient bookHttpClient = new BookHttpClient();
+            String allBooks = bookHttpClient.getBookRessources(params[0]);
+
+            bookArrayList = JSONBookParser.parseManyBooks(allBooks);
+
+            return bookArrayList;
         }
 
         @Override
