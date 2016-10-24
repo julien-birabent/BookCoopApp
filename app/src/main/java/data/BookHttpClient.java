@@ -17,18 +17,33 @@ import utils.JSONUtils;
 
 public class BookHttpClient {
 
+    // A compléter
+    public final static String POST_BOOK_URL = "";
+    public final static String GET_LIST_BOOK_URL = "";
+    public final static String GET_LAST_BOOK = "";
 
     // Méthode permettant d'envoyer un ISBN au serveur afin que celui-ci cherche le livre correspondant
     // et l'ajoute à la liste de livres d'un étudiant.
-    public void postBookToWebApp(String isbn){
+    public void postBook(String isbn){
 
 
     }
 
-    /*
+    /**
     méthode permettant de récupérer la liste des livres associée à un étudiant.
      */
-    public String getBooksFromWebApp(String url){
+    public String getAllBooks(String url){
+        return null;
+    }
+
+    /**
+     * Méthode permettant de fetch le dernier livre ajouté
+     * @param url
+     * @return
+     */
+    public String getGetLastBook(String url){
+
+
         return null;
     }
 

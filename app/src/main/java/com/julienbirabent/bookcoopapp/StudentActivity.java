@@ -109,7 +109,7 @@ public class StudentActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             // On envoie la requête de dépôt de livre au serveur
             // Params[0] est l'isbn qui est passé
-            new BookHttpClient().postBookToWebApp(params[0]);
+            new BookHttpClient().postBook(params[0]);
 
             return null;
         }

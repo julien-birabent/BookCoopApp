@@ -9,8 +9,7 @@ import org.json.JSONObject;
 
 public class JSONUtils {
 
-    // A compléter
-    public final static String POST_BOOK_URL = "";
+
 
 
     public static JSONObject getObject(String tagName, JSONObject jsonObject) throws JSONException {
