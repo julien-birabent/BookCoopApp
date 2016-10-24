@@ -21,9 +21,10 @@ import utils.JSONUtils;
 public class BookHttpClient {
 
     // A compléter
-    public final static String POST_BOOK_URL = "";
-    public final static String GET_LIST_BOOK_URL = "";
-    public final static String GET_LAST_BOOK = "";
+    public final static String BASE_URL="http://example.com/ressources";
+    public final static String POST_BOOK_URL = "/books/add";
+    public final static String GET_ALL_BOOK_URL = "/books";
+    public final static String GET_LAST_BOOK = "/book/last";
     public final static String PARAM_ISBN = "isbn=";
 
     // Méthode permettant d'envoyer un ISBN au serveur afin que celui-ci cherche le livre correspondant
@@ -33,7 +34,7 @@ public class BookHttpClient {
         HttpURLConnection conn = null;
         try {
 
-            URL url = new URL(POST_BOOK_URL);
+            URL url = new URL(BASE_URL + POST_BOOK_URL);
             conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
@@ -57,21 +58,46 @@ public class BookHttpClient {
     }
 
     /**
-    méthode permettant de récupérer la liste des livres associée à un étudiant.
-     */
-    public String getAllBooks(String url){
-        return null;
-    }
-
-    /**
      * Méthode permettant de fetch le dernier livre ajouté
      * @param url
      * @return
      */
-    public String getGetLastBook(String url){
+    public String getBookRessources(String url){
+
+        HttpURLConnection connection;
+        InputStream inputStream;
+        StringBuffer stringBuffer = new StringBuffer();
+
+        try {
+            connection = (HttpURLConnection) (new URL(url)).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.setDoInput(true);
+            connection.connect();
+
+            //Read the response
+
+            inputStream = connection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuffer.append(line + "\r\n");
+            }
+
+            inputStream.close();
+            connection.disconnect();
 
 
-        return null;
+            return stringBuffer.toString();
+
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return stringBuffer.toString();
+
     }
 
 
