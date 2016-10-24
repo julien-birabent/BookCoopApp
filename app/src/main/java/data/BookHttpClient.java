@@ -1,10 +1,13 @@
 package data;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 
 import utils.JSONUtils;
@@ -21,10 +24,34 @@ public class BookHttpClient {
     public final static String POST_BOOK_URL = "";
     public final static String GET_LIST_BOOK_URL = "";
     public final static String GET_LAST_BOOK = "";
+    public final static String PARAM_ISBN = "isbn=";
 
     // Méthode permettant d'envoyer un ISBN au serveur afin que celui-ci cherche le livre correspondant
     // et l'ajoute à la liste de livres d'un étudiant.
     public void postBook(String isbn){
+
+        HttpURLConnection conn = null;
+        try {
+
+            URL url = new URL(POST_BOOK_URL);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            String body = PARAM_ISBN + isbn;
+            OutputStream output = new BufferedOutputStream(conn.getOutputStream());
+            output.write(body.getBytes());
+            output.flush();
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            conn.disconnect();
+        }
 
 
     }
