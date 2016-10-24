@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import data.BookHttpClient;
 import model.Book;
 import model.Student;
@@ -94,6 +96,57 @@ public class StudentActivity extends AppCompatActivity {
             // Handle other intents
         }
 
+    }
+
+    /**
+     * Tâche asynchrone pour s'occuper de récupérer le dernier livre ajouté contenu dans la
+     * base de donnée du serveur pour cet étudiant.
+     */
+    private class GetLastBookTask extends AsyncTask<String,String,Book> {
+
+        @Override
+        protected Book doInBackground(String... params) {
+
+            Book book = new Book();
+            /**
+             * Ici on récupère le livre via BookHttpClient et on le convertit en objet physique
+             * avec JSONBookParser.
+             */
+            return book;
+        }
+
+        @Override
+        protected void onPostExecute(Book book) {
+            // A la fin de l'éxécution, le livre que l'on a récupéré est ajouter à la liste
+            // de livres de l'étudiant .
+            if(book!=null){
+                getSessionStudent().getBooksList().add(book);
+            }
+
+        }
+    }
+
+    /**
+     * Tâche asynchrone permettant de récupérer la liste complète de livres d'un étudiant.
+     */
+    private class GetAllBooksTask extends AsyncTask<String,String,ArrayList<Book>> {
+
+        @Override
+        protected ArrayList<Book> doInBackground(String... params) {
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Book> books) {
+
+            // après avoir récupéré la liste de livre de l'étudiant via le serveur, on définit
+            // cette liste comme la liste a afficher.
+            if(books!=null) {
+                getSessionStudent().setBooksList(books);
+            }
+        }
     }
 
     private class PostBookTask extends AsyncTask<String,String,String>{
