@@ -85,6 +85,10 @@ public class StudentActivity extends AppCompatActivity {
                     // au serveur pour que celui ci ajoute le livre au compte étudiant.
                     PostBookTask postBookTask = new PostBookTask();
                     postBookTask.execute(isbn);
+
+                    GetLastBookTask getLastBookTask = new GetLastBookTask();
+                    // Les parametres de cet appel sont amenés à changer plus tard
+                    getLastBookTask.execute();
                 }
 
 
@@ -121,6 +125,8 @@ public class StudentActivity extends AppCompatActivity {
             // de livres de l'étudiant .
             if(book!=null){
                 getSessionStudent().getBooksList().add(book);
+                // Ajouter le livre dans la liste de l'interface aussi
+                // *Code*
             }
 
         }
