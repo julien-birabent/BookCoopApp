@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class StudentActivity extends AppCompatActivity {
     public final  int SCANNER_REQUEST_CODE=0;
     public final String SCANNER_MODE = "ONE_D_MODE";
     private ListView booksList;
+    private ArrayAdapter<String> bookListAdapter ;
     private Student sessionStudent;
 
 
@@ -59,7 +61,7 @@ public class StudentActivity extends AppCompatActivity {
      */
     public void initializeBookList(){
 
-
+        Book[] bookList = (Book[]) getSessionStudent().getBooksList().toArray();
 
     }
 
@@ -218,5 +220,13 @@ public class StudentActivity extends AppCompatActivity {
 
     public void setSessionStudent(Student sessionStudent) {
         this.sessionStudent = sessionStudent;
+    }
+
+    public ArrayAdapter<String> getBookListAdapter() {
+        return bookListAdapter;
+    }
+
+    public void setBookListAdapter(ArrayAdapter<String> bookListAdapter) {
+        this.bookListAdapter = bookListAdapter;
     }
 }

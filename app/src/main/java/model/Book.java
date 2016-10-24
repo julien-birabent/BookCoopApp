@@ -63,4 +63,15 @@ public class Book {
     public void setNbPages(int nbPages) {
         this.nbPages = nbPages;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "isbn=" + isbn +
+                ", author='" + author + '\'' +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", nbPages=" + nbPages +
+                '}';
+    }
 }
