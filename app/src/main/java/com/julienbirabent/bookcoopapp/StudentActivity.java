@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import data.BookHttpClient;
 import model.Book;
 import model.Student;
 
@@ -35,6 +36,7 @@ public class StudentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         booksList = (ListView) findViewById(R.id.listView_books);
+        initializeBookList();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +48,16 @@ public class StudentActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * Méthode appelé au démarrage de l'activité. Sert à aller chercher la liste de livres
+     * de l'étudiant et à l'insérer dans l'interface.
+     */
+    public void initializeBookList(){
+
+
+
     }
 
     /**
@@ -61,10 +73,19 @@ public class StudentActivity extends AppCompatActivity {
             // Handle scan intent
             if (resultCode == Activity.RESULT_OK) {
                 // Handle successful scan
-                String contents = intent.getStringExtra("SCAN_RESULT");
+                String isbn = intent.getStringExtra("SCAN_RESULT");
                 String formatName = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
-                Toast.makeText(getApplicationContext(), " ISBN : " + contents,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), " ISBN : " + isbn,Toast.LENGTH_LONG).show();
+
+                if(checkInternetConnection()) {
+                    // Avec l'isbn récupéré on créé une tâche qui va se charge d'envoyer l'isbn
+                    // au serveur pour que celui ci ajoute le livre au compte étudiant.
+                    PostBookTask postBookTask = new PostBookTask();
+                    postBookTask.execute(isbn);
+                }
+
+
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Handle cancel
@@ -75,38 +96,21 @@ public class StudentActivity extends AppCompatActivity {
 
     }
 
-    private class PostBookTask extends AsyncTask<String,String,Book>{
+    private class PostBookTask extends AsyncTask<String,String,String>{
 
-        /*
-       S'éxécute après que le travail est été fait.
-         */
-        @Override
-        protected void onPostExecute(Book book) {
-
-            /*
-            Ici :
-            - ajouter le livre à la liste de livre de l'étudiant de session.
-
-             */
-
-        }
-        /*
-
-         S'éxécute avant le lancement de la tâche de fond
-         */
-        @Override
-        protected void onPreExecute() {
-
-        }
 
         /**
          * Ici, faire les requêtes HTTP et parser les JSON reçu pour obtenir une variable de sorti
          * conforme au modèle Book
          * @param params
-         * @return
+         *
          */
         @Override
-        protected Book doInBackground(String... params) {
+        protected String doInBackground(String... params) {
+            // On envoie la requête de dépôt de livre au serveur
+            // Params[0] est l'isbn qui est passé
+            new BookHttpClient().postBookToWebApp(params[0]);
+
             return null;
         }
     }
