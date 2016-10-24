@@ -42,7 +42,13 @@ public class StudentActivity extends AppCompatActivity {
 
         booksList = (ListView) findViewById(R.id.listView_books);
 
+        // On demande la liste de livres de l'étudiant pour pouvoir initliaser la liste de description
+        // au démarrage de l'activité
+        GetAllBooksTask getAllBooksTask = new GetAllBooksTask();
+        getAllBooksTask.execute(BookHttpClient.BASE_URL+BookHttpClient.GET_ALL_BOOK_URL);
 
+        // Définition du bouton flottant permettant de demander l'accès à l'application zxing pour
+        // le scan de l'isbn
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +84,17 @@ public class StudentActivity extends AppCompatActivity {
         getBooksList().setAdapter(getBookListAdapter());
     }
 
+    /**
+     * méthode permettant d'ajouter une description de livre à la listeView de description de livre
+     * de l'activité
+     * @param book
+     */
     public void addBookToListView(Book book){
 
         if(getBookListAdapter()!=null){
             getBookListAdapter().add(book.toString());
         }
+        getBooksList();
 
     }
 
