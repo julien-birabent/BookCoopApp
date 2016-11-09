@@ -37,6 +37,36 @@ public class Student {
 
     }
 
+    /**
+     * Métthode convertissant la liste des livres d'un étduiant en unn ArrayList<String>
+     * @return
+     */
+    public ArrayList<String> booksListToArrayListOfString(){
+
+        ArrayList<String> books = new ArrayList<String>();
+
+        for (Book book:booksList) {
+            books.add(book.toString());
+        }
+
+        return books;
+    }
+
+    /** Convertit la liste de livre en tableau 1D
+     *
+      */
+
+    public Book[] booksListToArray(){
+
+        Book books[] = new Book[getBooksList().size()];
+
+        for(int i = 0; i<books.length;i++){
+            books[i] = getBooksList().get(i);
+        }
+
+        return books;
+    }
+
     public ArrayList<Book> getBooksList() {
         return booksList;
     }

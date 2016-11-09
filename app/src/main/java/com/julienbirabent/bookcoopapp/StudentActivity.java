@@ -28,6 +28,7 @@ public class StudentActivity extends AppCompatActivity {
     public final String SCANNER_MODE = "ONE_D_MODE";
     private ListView booksList;
     private ArrayAdapter<String> bookListAdapter ;
+    private ArrayList<String> booksString = new ArrayList<String>();
     private Student sessionStudent;
 
 
@@ -36,15 +37,28 @@ public class StudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        booksList = (ListView) findViewById(R.id.listView_books);
+
+        initActivity();
 
         // On demande la liste de livres de l'étudiant pour pouvoir initliaser la liste de description
         // au démarrage de l'activité
         GetAllBooksTask getAllBooksTask = new GetAllBooksTask();
         getAllBooksTask.execute(BookHttpClient.BASE_URL+BookHttpClient.GET_ALL_BOOK_URL);
+
+
+
+    }
+
+    /**
+     * Méthode instanciant les composants de l'activité.
+     */
+    public void initActivity(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        this.booksList = (ListView) findViewById(R.id.listView_books);
+
+        this.sessionStudent = new Student();
 
         // Définition du bouton flottant permettant de demander l'accès à l'application zxing pour
         // le scan de l'isbn
@@ -58,31 +72,20 @@ public class StudentActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     /**
-     * Méthode appelé au démarrage de l'activité. Sert à aller chercher la liste de livres
-     * de l'étudiant et à l'insérer dans l'interface.
+     * Méthode permettant de mettre à jour la ListView contenant les description de livres
+     * Méthode
      */
-    public void initializeBookList(){
+    public void fillBookListView(){
 
+        booksString = this.getSessionStudent().booksListToArrayListOfString();
+        this.bookListAdapter = new ArrayAdapter<String>(this,R.layout.book_item,booksString);
+        this.getBooksList().setAdapter(this.bookListAdapter);
 
-        // On récupère la liste de Book de l'étudiant sous forme de tableau 1D
-        Book[] bookList = (Book[]) getSessionStudent().getBooksList().toArray();
-
-        
-        // On définit un autre tableau 1D qui contiendra les String décrivant chaque Book
-        String[] bookStringList = new String[bookList.length];
-        // On initialise l'ArrayAdapter responsable de faire le lien entre nos données et la listView
-        bookListAdapter= new ArrayAdapter<String>(this, R.layout.book_item, bookStringList);
-        // chaque string décrivant un livre est ajouter à l'adapter.
-        for(int i =0 ; i < bookStringList.length;i++){
-            bookStringList[i] = bookList[i].toString();
-            getBookListAdapter().add(bookStringList[i]);
-        }
-
-        // On donne le modèle de donnée à afficher à notre listview
-        getBooksList().setAdapter(getBookListAdapter());
     }
 
     /**
@@ -92,11 +95,7 @@ public class StudentActivity extends AppCompatActivity {
      */
     public void addBookToListView(Book book){
 
-        if(getBookListAdapter()!=null){
-            getBookListAdapter().add(book.toString());
-        }
-        getBooksList();
-
+        this.getBookListAdapter().add(book.toString());
     }
 
     /**
@@ -120,12 +119,12 @@ public class StudentActivity extends AppCompatActivity {
                 if(checkInternetConnection()) {
                     // Avec l'isbn récupéré on créé une tâche qui va se charge d'envoyer l'isbn
                     // au serveur pour que celui ci ajoute le livre au compte étudiant.
-                    PostBookTask postBookTask = new PostBookTask();
+                  /*  PostBookTask postBookTask = new PostBookTask();
                     postBookTask.execute(isbn);
 
                     GetLastBookTask getLastBookTask = new GetLastBookTask();
                     // Les parametres de cet appel sont amenés à changer plus tard
-                    getLastBookTask.execute(BookHttpClient.BASE_URL + BookHttpClient.GET_LAST_BOOK);
+                    getLastBookTask.execute(BookHttpClient.BASE_URL + BookHttpClient.GET_LAST_BOOK);*/
                 }
 
 
@@ -201,8 +200,8 @@ public class StudentActivity extends AppCompatActivity {
             if(books!=null) {
                 getSessionStudent().setBooksList(books);
             }
-            // On affiche la liste
-            initializeBookList();
+            // On remplis et on affiche les descriptions de livres.
+            fillBookListView();
         }
     }
 
