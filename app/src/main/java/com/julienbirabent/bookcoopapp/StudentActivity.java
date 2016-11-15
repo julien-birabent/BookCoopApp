@@ -26,10 +26,15 @@ public class StudentActivity extends AppCompatActivity {
 
     public final  int SCANNER_REQUEST_CODE=0;
     public final String SCANNER_MODE = "ONE_D_MODE";
+
+
+
     private ListView booksList;
     private ArrayAdapter<String> bookListAdapter ;
     private ArrayList<String> booksString = new ArrayList<String>();
     private Student sessionStudent;
+
+
 
 
 
@@ -44,7 +49,7 @@ public class StudentActivity extends AppCompatActivity {
         // On demande la liste de livres de l'étudiant pour pouvoir initliaser la liste de description
         // au démarrage de l'activité
         GetAllBooksTask getAllBooksTask = new GetAllBooksTask();
-        getAllBooksTask.execute(BookHttpClient.BASE_URL+BookHttpClient.GET_ALL_BOOK_URL);
+        getAllBooksTask.execute();
 
 
 
