@@ -1,6 +1,7 @@
 package com.julienbirabent.bookcoopapp;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import model.Student;
 
 public class LoginActivity extends AppCompatActivity {
+
 
     private Button signInButton;
     private EditText userName;
@@ -41,5 +43,25 @@ public class LoginActivity extends AppCompatActivity {
         userName = (EditText) findViewById(R.id.usernameId);
         password = (EditText) findViewById(R.id.passwordId);
         phoneNumber = (EditText) findViewById((R.id.phoneId));
+    }
+
+    private class LoginTask extends AsyncTask<String,String,String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+
+
     }
 }
