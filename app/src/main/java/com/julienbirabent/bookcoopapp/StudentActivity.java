@@ -153,7 +153,7 @@ public class StudentActivity extends AppCompatActivity {
              * avec JSONBookParser.
              */
             BookHttpClient bookHttpClient = new BookHttpClient();
-            String lastBook = bookHttpClient.getBookRessources(params[0]);
+            String lastBook = bookHttpClient.sendGet(params[0]);
 
             book = JSONBookParser.parseBook(lastBook);
 
@@ -185,7 +185,7 @@ public class StudentActivity extends AppCompatActivity {
 
 
             BookHttpClient bookHttpClient = new BookHttpClient();
-            String allBooks = bookHttpClient.getBookRessources(params[0]);
+            String allBooks = bookHttpClient.sendGet(params[0]);
 
             bookArrayList = JSONBookParser.parseManyBooks(allBooks);
 
@@ -217,8 +217,9 @@ public class StudentActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             // On envoie la requête de dépôt de livre au serveur
-            // Params[0] est l'isbn qui est passé
-            new BookHttpClient().postBook(params[0]);
+            // Params[0] : url
+            // param[1] : paramètres de la requête
+            new BookHttpClient().sendPost(params[0], params[1]);
 
             return null;
         }
