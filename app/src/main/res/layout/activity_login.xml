@@ -19,25 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/phoneId"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_below="@id/signinTextId"
-        android:hint="phone number"
-        android:inputType="phone"
-        android:layout_marginTop="100dp"
-        android:layout_width="@dimen/editText_horizontal_size"
-        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/usernameId"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:hint="email"
-        android:layout_below="@id/phoneId"
-        android:layout_width="@dimen/editText_horizontal_size"
+        android:layout_below="@id/bookIconId"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:singleLine="false"
         android:inputType="textEmailAddress" />
     <EditText
@@ -45,11 +36,11 @@
         android:layout_below="@+id/usernameId"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:hint="password"
+        android:hint="token"
 
         android:layout_marginTop="10dp"
         android:inputType="textPassword"
-        android:layout_width="@dimen/editText_horizontal_size"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:password="false"
         android:shadowColor="@color/colorPrimary"
