@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 import data.BookHttpClient;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         getViewsById();
         setOnClickListener();
         userName.setText("jul.birabent@gmail.com");
+        token.setText("GsUQuFBRter9sYbhg6yY ");
 
     }
     private void setOnClickListener(){
@@ -44,11 +46,11 @@ public class LoginActivity extends AppCompatActivity {
                 String token = getToken().getText().toString();
 
                 // On créé la chaîne de caractère qui va contenir les paramètres de la requête serveur
-                String params = HttpUtils.STUDENT_PARAM + userName +
+                String params ="?"+ HttpUtils.STUDENT_PARAM + userName +
                         HttpUtils.AND + HttpUtils.STUDENT_TOKEN_PARAM + token;
                 // On lance une tâche asynchrone pour effectuer la requête serveur
                 LoginTask loginTask = new LoginTask();
-                loginTask.execute(new String[]{HttpUtils.SERVER_URL,params});
+                loginTask.execute(new String[]{HttpUtils.SERVER_URL+params});
 
             }
         });
@@ -81,8 +83,8 @@ public class LoginActivity extends AppCompatActivity {
 
             BookHttpClient hhtpClient = new BookHttpClient();
             // On envoie la requête HTTP avec l'url données en paramètres
-            String response = hhtpClient.sendPost(params[0],params[1]);
-           // String response = hhtpClient.sendGet("http://104.236.210.211:3000/?student_email=jul.birabent@gmail.com&student_token=GsUQuFBRter9sYbhg6yY");
+            String response = hhtpClient.sendGet(params[0]);
+
 
             return response;
         }
@@ -92,8 +94,9 @@ public class LoginActivity extends AppCompatActivity {
 
             super.onPostExecute(s);
 
+            Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
             // Si la réponse du serveur nous autorise, on passe à l'activité suivante
-           if(s == CODE_VALID ){
+           if(s.equals(CODE_VALID)){
                 Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
                 intent.putExtra(USER_NAME, userName.getText().toString());
                 intent.putExtra(TOKEN,token.getText().toString());
