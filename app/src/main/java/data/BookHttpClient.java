@@ -1,16 +1,22 @@
 package data;
 
+import org.apache.http.impl.client.HttpClientBuilder;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import utils.JSONUtils;
 
 /**
  * Created by Julien on 23/10/2016.
@@ -20,62 +26,138 @@ import utils.JSONUtils;
 
 public class BookHttpClient {
 
-    // A compléter
-    public final static String BASE_URL="http://example.com/ressources";
-    public final static String POST_BOOK_URL = "/books/add";
-    public final static String GET_ALL_BOOK_URL = "/books";
-    public final static String GET_LAST_BOOK = "/book/last";
-    public final static String PARAM_ISBN = "isbn=";
 
-    // Méthode permettant d'envoyer un ISBN au serveur afin que celui-ci cherche le livre correspondant
-    // et l'ajoute à la liste de livres d'un étudiant.
-    public void postBook(String isbn){
 
-        HttpURLConnection conn = null;
+    /**
+     * Méthode envoyant une requête HTTP via "POST"
+     * @param url
+     * @param params
+     */
+    public String sendPost(String url, String params){
+
+
         try {
 
-            URL url = new URL(BASE_URL + POST_BOOK_URL);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
+
+            HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
-            conn.setDoOutput(true);
-            String body = PARAM_ISBN + isbn;
-            OutputStream output = new BufferedOutputStream(conn.getOutputStream());
-            output.write(body.getBytes());
-            output.flush();
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+
+            conn.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+            conn.setFixedLengthStreamingMode(params.getBytes().length);
+
+            conn.setRequestProperty("User-Agent","Mozilla/5.0 ( compatible ) ");
+            conn.setRequestProperty("Accept","*/*");
+
+
+            DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+            wr.writeBytes(params);
+            wr.flush();
+            wr.close();
+
+
+            // On veut lire la réponse du serveur
+            int responseCode = conn.getResponseCode();
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + params);
+            System.out.println("Response Code : " + responseCode);
+
+            if(responseCode == 404 ){
+
+                conn.getErrorStream();
+            }
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            System.out.println("Réponse du serveur : " + response.toString());
+            in.close();
+            conn.disconnect();
+
+            return  Integer.toString(responseCode);
 
         } catch (ProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            conn.disconnect();
+
         }
-
-
+        return "Requête non concluante";
     }
 
     /**
-     * Méthode permettant de fetch le dernier livre ajouté
+     * Méthode permettant d'obtenir le code réponse du requête url via la méthode GET
      * @param url
      * @return
      */
-    public String getBookRessources(String url){
-
-        HttpURLConnection connection;
-        InputStream inputStream;
-        StringBuffer stringBuffer = new StringBuffer();
+    public String getResponseCodeFor(String url){
 
         try {
+            HttpURLConnection connection;
+            InputStream inputStream;
+            StringBuffer stringBuffer = new StringBuffer();
+
+            // On définit la connection et on l'ouvre
             connection = (HttpURLConnection) (new URL(url)).openConnection();
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
-            connection.setDoInput(true);
+            connection.setDoOutput(false);
             connection.connect();
 
-            //Read the response
+            // Print la réponse
+            int responseCode = connection.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+
+            connection.disconnect();
+
+            return Integer.toString(responseCode);
+
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return "requête non concluante";
+    }
+
+    /**
+     * Méthode permettant de demander une ressource via la méthode GET de HTTP
+     * @param url
+     * @return
+     */
+    public String sendGet(String url){
+
+
+
+        try {
+            HttpURLConnection connection;
+            InputStream inputStream;
+            StringBuffer stringBuffer = new StringBuffer();
+
+            // On définit la connection et on l'ouvre
+            connection = (HttpURLConnection) (new URL(url)).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.setDoOutput(false);
+            connection.connect();
+
+            // Print la réponse
+            int responseCode = connection.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+
+            //On lit la réponse si il y'en a une
 
             inputStream = connection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -88,7 +170,6 @@ public class BookHttpClient {
             inputStream.close();
             connection.disconnect();
 
-
             return stringBuffer.toString();
 
 
@@ -96,7 +177,7 @@ public class BookHttpClient {
 
             e.printStackTrace();
         }
-        return stringBuffer.toString();
+        return "requête non concluante";
 
     }
 
