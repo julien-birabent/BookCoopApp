@@ -8,23 +8,30 @@ import java.util.Date;
 
 public class Copy {
 
-    private int numCopy;
+    private int copyId;
+    private int bookId;
     private Date depositeDate;
     private availability availability;
     private physicalState physicalState;
 
     public enum availability{
-        AVAILABLE,
+        FOR_SALE,
     }
     public enum physicalState{
         LIKE_NEW, USED, VERY_USED
     }
 
-    public Copy(int numCopy, Date depositeDate, Copy.availability availability, Copy.physicalState physicalState) {
-        this.numCopy = numCopy;
+    public Copy(int copyId, Date depositeDate, Copy.availability availability, Copy.physicalState physicalState) {
+        this.copyId = copyId;
         this.depositeDate = depositeDate;
         this.availability = availability;
         this.physicalState = physicalState;
+    }
+
+    public Copy(int copyId, int bookId){
+        this.copyId = copyId;
+        this.bookId = bookId;
+
     }
 
     public Copy(){
@@ -47,17 +54,9 @@ public class Copy {
         this.physicalState = physicalState;
     }
 
-    public Copy(int numCopy, Date depositeDate) {
-        this.numCopy = numCopy;
+    public Copy(int copyId, Date depositeDate) {
+        this.copyId = copyId;
         this.depositeDate = depositeDate;
-    }
-
-    public int getNumCopy() {
-        return numCopy;
-    }
-
-    public void setNumCopy(int numCopy) {
-        this.numCopy = numCopy;
     }
 
     public Date getDepositeDate() {
@@ -66,5 +65,21 @@ public class Copy {
 
     public void setDepositeDate(Date depositeDate) {
         this.depositeDate = depositeDate;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
+    public int getCopyId() {
+        return copyId;
+    }
+
+    public void setCopyId(int copyId) {
+        this.copyId = copyId;
     }
 }
