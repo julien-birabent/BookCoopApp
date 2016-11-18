@@ -19,8 +19,11 @@ import java.util.ArrayList;
 
 import data.BookHttpClient;
 import data.JSONBookParser;
+import data.JSONCopyParser;
 import model.Book;
+import model.Copy;
 import model.Student;
+import utils.HttpUtils;
 
 public class StudentActivity extends AppCompatActivity {
 
@@ -48,10 +51,8 @@ public class StudentActivity extends AppCompatActivity {
 
         // On demande la liste de livres de l'étudiant pour pouvoir initliaser la liste de description
         // au démarrage de l'activité
-        GetAllBooksTask getAllBooksTask = new GetAllBooksTask();
-        getAllBooksTask.execute();
-
-
+       // GetAllBooksTask getAllBooksTask = new GetAllBooksTask();
+        //getAllBooksTask.execute();
 
     }
 
@@ -63,7 +64,11 @@ public class StudentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         this.booksList = (ListView) findViewById(R.id.listView_books);
 
+        // on récupère les informations de connection de l'étudiant
         this.sessionStudent = new Student();
+        Intent intent = getIntent();
+        sessionStudent.setEmail(intent.getStringExtra(LoginActivity.USER_NAME));
+        sessionStudent.setPassword(intent.getStringExtra(LoginActivity.TOKEN));
 
         // Définition du bouton flottant permettant de demander l'accès à l'application zxing pour
         // le scan de l'isbn
@@ -111,6 +116,8 @@ public class StudentActivity extends AppCompatActivity {
      * @param intent
      */
     @Override
+
+
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == SCANNER_REQUEST_CODE) {
             // Handle scan intent
@@ -153,6 +160,7 @@ public class StudentActivity extends AppCompatActivity {
         protected Book doInBackground(String... params) {
 
             Book book = new Book();
+            Copy copy = new Copy();
             /**
              * Ici on récupère le livre via BookHttpClient et on le convertit en objet physique
              * avec JSONBookParser.

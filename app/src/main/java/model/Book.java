@@ -6,6 +6,7 @@ package model;
 
 public class Book {
 
+    private String bookId;
     private int isbn;
     private String author;
     private String title;
@@ -22,6 +23,14 @@ public class Book {
 
     public Book(){
 
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
 
     public int getIsbn() {

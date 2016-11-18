@@ -8,55 +8,22 @@ import java.util.Date;
 
 public class Copy {
 
-    private int copyId;
-    private int bookId;
+    private String copyId;
+    private String bookId;
     private Date depositeDate;
-    private availability availability;
-    private physicalState physicalState;
+    private String availability;
+    private String physicalState;
 
-    public enum availability{
-        FOR_SALE,
-    }
-    public enum physicalState{
-        LIKE_NEW, USED, VERY_USED
-    }
 
-    public Copy(int copyId, Date depositeDate, Copy.availability availability, Copy.physicalState physicalState) {
-        this.copyId = copyId;
-        this.depositeDate = depositeDate;
-        this.availability = availability;
-        this.physicalState = physicalState;
-    }
-
-    public Copy(int copyId, int bookId){
+    public Copy(String copyId, String bookId, String availability, String physicalState) {
         this.copyId = copyId;
         this.bookId = bookId;
-
+        this.availability = availability;
+        this.physicalState = physicalState;
     }
 
     public Copy(){
 
-    }
-
-    public Copy.availability getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(Copy.availability availability) {
-        this.availability = availability;
-    }
-
-    public Copy.physicalState getPhysicalState() {
-        return physicalState;
-    }
-
-    public void setPhysicalState(Copy.physicalState physicalState) {
-        this.physicalState = physicalState;
-    }
-
-    public Copy(int copyId, Date depositeDate) {
-        this.copyId = copyId;
-        this.depositeDate = depositeDate;
     }
 
     public Date getDepositeDate() {
@@ -67,19 +34,46 @@ public class Copy {
         this.depositeDate = depositeDate;
     }
 
-    public int getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
-    }
-
-    public int getCopyId() {
+    public String getCopyId() {
         return copyId;
     }
 
-    public void setCopyId(int copyId) {
+    public void setCopyId(String copyId) {
         this.copyId = copyId;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public String getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(String availability) {
+        this.availability = availability;
+    }
+
+    public String getPhysicalState() {
+        return physicalState;
+    }
+
+    public void setPhysicalState(String physicalState) {
+        this.physicalState = physicalState;
+    }
+
+    @Override
+    public String toString() {
+        return "Copy{" +
+                "copyId=" + copyId +
+                ", bookId=" + bookId +
+                ", depositeDate=" + depositeDate +
+                ", availability='" + availability + '\'' +
+                ", physicalState='" + physicalState + '\'' +
+                '}';
     }
 }

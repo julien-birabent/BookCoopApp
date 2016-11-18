@@ -21,17 +21,6 @@
 
 
     <EditText
-        android:id="@+id/usernameId"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:hint="email"
-        android:layout_below="@id/bookIconId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:singleLine="false"
-        android:inputType="textEmailAddress" />
-    <EditText
         android:id="@+id/passwordId"
         android:layout_below="@+id/usernameId"
         android:layout_centerHorizontal="true"
@@ -57,14 +46,25 @@
         android:layout_height="wrap_content" />
 
     <ImageView
-        android:id="@+id/bookIconId"
+        android:id="@+id/book_icon"
         android:src="@mipmap/ic_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:adjustViewBounds="true"
         android:layout_below="@+id/signinTextId"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
-        android:adjustViewBounds="true" />
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/usernameId"
+        android:hint="email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/book_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

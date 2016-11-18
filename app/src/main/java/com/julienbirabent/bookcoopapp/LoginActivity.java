@@ -41,19 +41,35 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // On récupère les données fournis par l'utilisateur
-                String userName = getUserName().getText().toString();
-                String token = getToken().getText().toString();
-
                 // On créé la chaîne de caractère qui va contenir les paramètres de la requête serveur
-                String params ="?"+ HttpUtils.STUDENT_PARAM + userName +
-                        HttpUtils.AND + HttpUtils.STUDENT_TOKEN_PARAM + token;
+                String params = buildAthentificationUrl();
                 // On lance une tâche asynchrone pour effectuer la requête serveur
                 LoginTask loginTask = new LoginTask();
                 loginTask.execute(new String[]{HttpUtils.SERVER_URL+params});
 
             }
         });
+    }
+
+    /**
+     * Méthode ou l'on créé l'url permettant d'envoyer la requpete d'authenfication du client.
+     * @return
+     */
+    private String buildAthentificationUrl(){
+
+        // On récupère les données fournis par l'utilisateur
+        String userName = getUserName().getText().toString();
+        String token = getToken().getText().toString();
+
+        // On créé la chaîne de caractère qui va contenir les paramètres de la requête serveur
+        String params ="?"+ HttpUtils.STUDENT_PARAM + userName +
+                HttpUtils.AND + HttpUtils.STUDENT_TOKEN_PARAM + token;
+        return params;
+    }
+
+    private void testGoToStudentActivity(){
+        Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
+        startActivity(intent);
     }
 
     private void getViewsById(){
@@ -83,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
 
             BookHttpClient hhtpClient = new BookHttpClient();
             // On envoie la requête HTTP avec l'url données en paramètres
-            String response = hhtpClient.sendGet(params[0]);
+            String response = hhtpClient.getResponseCodeFor(params[0]);
 
 
             return response;
