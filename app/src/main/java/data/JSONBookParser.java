@@ -31,7 +31,7 @@ public class JSONBookParser {
      * @param contents
      * @return
      */
-    public static Book parseBook(String contents)
+    public  Book parseBook(String contents)
     {
         Book book = new Book();
 
@@ -42,9 +42,9 @@ public class JSONBookParser {
             // On remplit les champs de l'instance de Book avant de la retourner
             book.setAuthor(JSONUtils.getString(AUTHOR, objBook));
             book.setTitle(JSONUtils.getString(TITLE,objBook));
-            book.setIsbn(JSONUtils.getInt(ISBN,objBook));
-            book.setNbPages(JSONUtils.getInt(PAGE_COUNT,objBook));
-            book.setPrice(JSONUtils.getFloat(MINT_PRICE,objBook));
+            book.setIsbn(JSONUtils.getString(ISBN,objBook));
+            book.setNbPages(JSONUtils.getString(PAGE_COUNT,objBook));
+            book.setPrice(JSONUtils.getString(MINT_PRICE,objBook));
 
             JSONObject objIdBook = JSONUtils.getObject(BOOK_ID,objBook);
             book.setBookId(JSONUtils.getString(ID,objIdBook));
@@ -63,7 +63,7 @@ public class JSONBookParser {
      * @param contents
      * @return
      */
-    public static ArrayList<Book> parseManyBooks(String contents){
+    public  ArrayList<Book> parseManyBooks(String contents){
 
         ArrayList<Book> bookArrayList = new ArrayList<Book>();
         try {

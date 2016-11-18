@@ -45,14 +45,7 @@ public class StudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
-
-
         initActivity();
-
-        // On demande la liste de livres de l'étudiant pour pouvoir initliaser la liste de description
-        // au démarrage de l'activité
-       // GetAllBooksTask getAllBooksTask = new GetAllBooksTask();
-        //getAllBooksTask.execute();
 
     }
 
@@ -66,9 +59,16 @@ public class StudentActivity extends AppCompatActivity {
 
         // on récupère les informations de connection de l'étudiant
         this.sessionStudent = new Student();
+
         Intent intent = getIntent();
         sessionStudent.setEmail(intent.getStringExtra(LoginActivity.USER_NAME));
         sessionStudent.setPassword(intent.getStringExtra(LoginActivity.TOKEN));
+
+
+        // On demande la liste de livres de l'étudiant pour pouvoir initliaser la liste de description
+        // au démarrage de l'activité
+        // GetAllCopiesTask GetAllCopiesTask = new GetAllCopiesTask();
+        //GetAllCopiesTask.execute();
 
         // Définition du bouton flottant permettant de demander l'accès à l'application zxing pour
         // le scan de l'isbn
@@ -134,9 +134,9 @@ public class StudentActivity extends AppCompatActivity {
                   /*  PostBookTask postBookTask = new PostBookTask();
                     postBookTask.execute(isbn);
 
-                    GetLastBookTask getLastBookTask = new GetLastBookTask();
+                    GetLastCopyTask GetLastCopyTask = new GetLastCopyTask();
                     // Les parametres de cet appel sont amenés à changer plus tard
-                    getLastBookTask.execute(BookHttpClient.BASE_URL + BookHttpClient.GET_LAST_BOOK);*/
+                    GetLastCopyTask.execute(BookHttpClient.BASE_URL + BookHttpClient.GET_LAST_BOOK);*/
                 }
 
 
@@ -154,53 +154,56 @@ public class StudentActivity extends AppCompatActivity {
      * Tâche asynchrone pour s'occuper de récupérer le dernier livre ajouté contenu dans la
      * base de donnée du serveur pour cet étudiant.
      */
-    private class GetLastBookTask extends AsyncTask<String,String,Book> {
+    private class GetLastCopyTask extends AsyncTask<String,String,String> {
 
         @Override
-        protected Book doInBackground(String... params) {
+        protected String doInBackground(String... params) {
 
-            Book book = new Book();
-            Copy copy = new Copy();
-            /**
-             * Ici on récupère le livre via BookHttpClient et on le convertit en objet physique
+            /*
+             * Ici on récupère la dernière copie enregistré dans la BD via BookHttpClient et on le convertit en objet physique
              * avec JSONBookParser.
              */
-            BookHttpClient bookHttpClient = new BookHttpClient();
-            String lastBook = bookHttpClient.sendGet(params[0]);
 
-            book = JSONBookParser.parseBook(lastBook);
-
-            return book;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Book book) {
+        protected void onPostExecute(String data) {
             // A la fin de l'éxécution, le livre que l'on a récupéré est ajouter à la liste
             // de livres de l'étudiant .
-            if(book!=null){
-                getSessionStudent().getBooksList().add(book);
-                // Ajouter le livre dans la liste de l'interface aussi
-                addBookToListView(book);
-            }
+
 
         }
     }
 
     /**
-     * Tâche asynchrone permettant de récupérer la liste complète de livres d'un étudiant.
+     * Tâche asynchrone permettant de récupérer la liste complète de livres d'un étudiant et
+     * de l'afficher à l'endroit prévu dans l'UI.
      */
-    private class GetAllBooksTask extends AsyncTask<String,String,ArrayList<Book>> {
+    private class GetAllCopiesTask extends AsyncTask<String,String,ArrayList<Book>> {
 
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
 
+            ArrayList<Copy> copiesArrayList = new ArrayList<Copy>();
             ArrayList<Book> bookArrayList = new ArrayList<Book>();
-
-
+            JSONBookParser jsonBookParser = new JSONBookParser();
+            // On récupère toutes les copies lié à l'étudiant connecté
             BookHttpClient bookHttpClient = new BookHttpClient();
-            String allBooks = bookHttpClient.sendGet(params[0]);
+            String allCopies = bookHttpClient.sendGet(params[0]);
+            // On convertit les Copy format JSON en objet Copy
+            JSONCopyParser jsonCopyParser = new JSONCopyParser();
+            copiesArrayList = jsonCopyParser.parseManyCopies(allCopies);
+            // Pour chaque copie, on fait une requête dans la BD pour trouver le Book associé
+            // On convertit la description JSON du Book en objet Book et on associe la Copy à ce Book
+            for(int i= 0 ;i<copiesArrayList.size();i++){
+                String stringBook = bookHttpClient.sendGet(HttpUtils.SERVER_URL + HttpUtils.BOOK
+                + copiesArrayList.get(i).getBookId() + HttpUtils.JSON);
 
-            bookArrayList = JSONBookParser.parseManyBooks(allBooks);
+                Book book = jsonBookParser.parseBook(stringBook);
+                book.setCopy(copiesArrayList.get(i));
+                bookArrayList.add(book);
+            }
 
             return bookArrayList;
         }

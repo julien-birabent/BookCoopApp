@@ -19,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public final static String USER_NAME = "user_name";
     public final static String TOKEN = "token";
+    public final static String STUDENT_ID = "student_id";
     public final static String CODE_VALID ="200";
 
     private Button signInButton;
@@ -100,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
             BookHttpClient hhtpClient = new BookHttpClient();
             // On envoie la requête HTTP avec l'url données en paramètres
             String response = hhtpClient.getResponseCodeFor(params[0]);
+            System.out.println("Url envoyé au serveur :" + params[0]);
 
 
             return response;

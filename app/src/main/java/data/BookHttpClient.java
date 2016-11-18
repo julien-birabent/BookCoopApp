@@ -1,7 +1,5 @@
 package data;
 
-import org.apache.http.impl.client.HttpClientBuilder;
-
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Julien on 22/10/2016.
  */
@@ -7,19 +9,13 @@ package model;
 public class Book {
 
     private String bookId;
-    private int isbn;
+    private String isbn;
     private String author;
     private String title;
-    private double price;
-    private int nbPages;
+    private String price;
+    private String nbPages;
 
-    public Book(int isbn, String author, String title, double price, int nbPages) {
-        this.isbn = isbn;
-        this.author = author;
-        this.title = title;
-        this.price = price;
-        this.nbPages = nbPages;
-    }
+    private Copy copy;
 
     public Book(){
 
@@ -33,12 +29,23 @@ public class Book {
         this.bookId = bookId;
     }
 
-    public int getIsbn() {
-        return isbn;
+    @Override
+    public String toString() {
+        return "Book{" +
+                "author='" + author + '\'' +
+                ", title='" + title + '\'' +
+                ", price='" + price + '\'' +
+                ", nbPages='" + nbPages + '\'' +
+                getCopy().getPhysicalState() +
+                '}';
     }
 
-    public void setIsbn(int isbn) {
-        this.isbn = isbn;
+    public Copy getCopy() {
+        return copy;
+    }
+
+    public void setCopy(Copy copy) {
+        this.copy = copy;
     }
 
     public String getAuthor() {
@@ -57,30 +64,27 @@ public class Book {
         this.title = title;
     }
 
-    public double getPrice() {
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public int getNbPages() {
+    public String getNbPages() {
         return nbPages;
     }
 
-    public void setNbPages(int nbPages) {
+    public void setNbPages(String nbPages) {
         this.nbPages = nbPages;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "isbn=" + isbn +
-                ", author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                ", price=" + price +
-                ", nbPages=" + nbPages +
-                '}';
     }
 }

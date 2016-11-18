@@ -9,7 +9,7 @@ package utils;
 public class HttpUtils {
 
     public final static String SERVER_URL = "http://104.236.210.211:3000/";
-    public final static String LAST_COPIE = "copies/last.json/";
+    public final static String LAST_COPIE = "copies/last.json";
 
     // Ex pour récup un book associé à une copie : books/5807184ec8bf97325a533ff7.json
     //On peut maintenant ajouter un livre en faisant /books/add?isbn=*ISBN*
@@ -21,6 +21,7 @@ public class HttpUtils {
     public final static String MANAGER_TOKEN_PARAM ="coopmanager_token=";
 
     public final static String AND = "&";
+    public final static String JSON = ".json";
 
 
 

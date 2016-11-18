@@ -69,10 +69,8 @@ public class Copy {
     @Override
     public String toString() {
         return "Copy{" +
-                "copyId=" + copyId +
-                ", bookId=" + bookId +
-                ", depositeDate=" + depositeDate +
-                ", availability='" + availability + '\'' +
+                "copyId='" + copyId + '\'' +
+                ", bookId='" + bookId + '\'' +
                 ", physicalState='" + physicalState + '\'' +
                 '}';
     }

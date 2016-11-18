@@ -10,8 +10,8 @@ public class Student {
 
     private String email;
     private String password;
-    private int phoneNumber;
     private ArrayList<Book> booksList;
+    private String studentId;
 
 
 
@@ -29,13 +29,6 @@ public class Student {
 
     }
 
-    public Student(int phoneNumber, String password){
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.booksList = new ArrayList<Book>();
-
-
-    }
 
     /**
      * Métthode convertissant la liste des livres d'un étduiant en unn ArrayList<String>
@@ -91,12 +84,7 @@ public class Student {
         this.password = password;
     }
 
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
 
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+
 
 }
