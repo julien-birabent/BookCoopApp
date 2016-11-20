@@ -19,6 +19,7 @@ public class AddCopyDialog extends Dialog {
     private EditText priceEditText;
     private Spinner integrityDropDown;
     private Button confirmButton;
+    private boolean isComplete;
 
     public AddCopyDialog(Context context) {
         super(context);
@@ -38,15 +39,12 @@ public class AddCopyDialog extends Dialog {
             @Override
             public void onClick(View v) {
 
-
-                if(isDouble(priceEditText.getText().toString()) &&  !priceEditText.getText().toString().isEmpty()){
+                if(isDouble(priceEditText.getText().toString()) &&  !priceEditText.getText().toString().isEmpty()) {
+                    setComplete(true);
                     dismiss();
                 }
-
             }
         });
-
-
     }
 
     public String getPrice(){
@@ -67,6 +65,12 @@ public class AddCopyDialog extends Dialog {
     }
 
 
+    public boolean isComplete() {
+        return isComplete;
+    }
 
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
 }
 

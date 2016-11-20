@@ -2,6 +2,7 @@ package com.julienbirabent.bookcoopapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -30,11 +31,14 @@ public class StudentActivity extends AppCompatActivity {
     // Constantes pour l'utilisation du scanner d'isbn
     public final  int SCANNER_REQUEST_CODE=0;
     public final String SCANNER_MODE = "ONE_D_MODE";
+    public String lastIsbn =null;
 
     private ListView booksList;
     private ArrayAdapter<String> bookListAdapter ;
     private ArrayList<String> booksString = new ArrayList<String>();
     private Student sessionStudent;
+
+    private  AddCopyDialog addCopyDialog = null;
 
 
     @Override
@@ -43,6 +47,13 @@ public class StudentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_student);
         initActivity();
 
+    }
+
+    private  AddCopyDialog getAddCopyDialogInstance(){
+        if(addCopyDialog == null){
+            addCopyDialog = new AddCopyDialog(this);
+        }
+        return addCopyDialog;
     }
 
     /**
@@ -73,6 +84,37 @@ public class StudentActivity extends AppCompatActivity {
 
             }
         });
+
+        // Lorsque le client ferme le dialogue, on décide si oui ou non envoie une requête
+        // au serveur
+        getAddCopyDialogInstance().setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // Si le dialogue s'est terminé car le client à appuyer sur le boutton de confirmation
+                if(getAddCopyDialogInstance().isComplete()){
+                    // On reset le flag du dialogue
+                    getAddCopyDialogInstance().setComplete(false);
+                    System.out.println("Price : " + getAddCopyDialogInstance().getPrice());
+
+                    String price =  getAddCopyDialogInstance().getPrice();
+                    String integrity = getAddCopyDialogInstance().getIntegrity();
+
+                    String url = HttpUtils.SERVER_URL +"/add?isbn="+ getLastIsbn()
+                            + "&mint_price="+ price +"&integrity="+ integrity
+                            + "&student"+ getSessionStudent().getId();
+
+                    // Avec l'isbn récupéré on créé une tâche qui va se charge d'envoyer l'isbn
+                    // au serveur pour que celui ci ajoute le livre au compte étudiant.
+                  /*  PostBookTask postBookTask = new PostBookTask();
+                    postBookTask.execute(isbn);
+
+                    GetLastCopyTask GetLastCopyTask = new GetLastCopyTask();
+                    // Les parametres de cet appel sont amenés à changer plus tard
+                    GetLastCopyTask.execute();*/
+                }
+            }
+        });
+
 
 
     }
@@ -107,31 +149,22 @@ public class StudentActivity extends AppCompatActivity {
      * @param intent
      */
     @Override
-
-
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == SCANNER_REQUEST_CODE) {
             // Handle scan intent
             if (resultCode == Activity.RESULT_OK) {
                 // Handle successful scan
                 String isbn = intent.getStringExtra("SCAN_RESULT");
+                setLastIsbn(isbn);
                 String formatName = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
                 Toast.makeText(getApplicationContext(), " ISBN : " + isbn,Toast.LENGTH_LONG).show();
 
                 if(checkInternetConnection()) {
-                    // Avec l'isbn récupéré on créé une tâche qui va se charge d'envoyer l'isbn
-                    // au serveur pour que celui ci ajoute le livre au compte étudiant.
-                  /*  PostBookTask postBookTask = new PostBookTask();
-                    postBookTask.execute(isbn);
 
-                    GetLastCopyTask GetLastCopyTask = new GetLastCopyTask();
-                    // Les parametres de cet appel sont amenés à changer plus tard
-                    GetLastCopyTask.execute(BookHttpClient.BASE_URL + BookHttpClient.GET_LAST_BOOK);*/
+                    // Ici on affiche le dialogue
+                    getAddCopyDialogInstance().show();
                 }
-
-
-
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Handle cancel
             }
@@ -295,5 +328,13 @@ public class StudentActivity extends AppCompatActivity {
 
     public void setBookListAdapter(ArrayAdapter<String> bookListAdapter) {
         this.bookListAdapter = bookListAdapter;
+    }
+
+    public String getLastIsbn() {
+        return lastIsbn;
+    }
+
+    public void setLastIsbn(String lastIsbn) {
+        this.lastIsbn = lastIsbn;
     }
 }
