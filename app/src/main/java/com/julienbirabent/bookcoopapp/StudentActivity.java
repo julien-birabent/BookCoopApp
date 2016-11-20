@@ -95,22 +95,24 @@ public class StudentActivity extends AppCompatActivity {
                     // On reset le flag du dialogue
                     getAddCopyDialogInstance().setComplete(false);
                     System.out.println("Price : " + getAddCopyDialogInstance().getPrice());
-
+                    // On récupère les paramètres importants du dialogue qui vont servir à construire
+                    // la requête serveur
                     String price =  getAddCopyDialogInstance().getPrice();
                     String integrity = getAddCopyDialogInstance().getIntegrity();
-
+                    // On construit l'url permettant d'ajouter la copie à la liste de l'étudiant
                     String url = HttpUtils.SERVER_URL +"/add?isbn="+ getLastIsbn()
                             + "&mint_price="+ price +"&integrity="+ integrity
                             + "&student"+ getSessionStudent().getId();
 
-                    // Avec l'isbn récupéré on créé une tâche qui va se charge d'envoyer l'isbn
-                    // au serveur pour que celui ci ajoute le livre au compte étudiant.
                   /*  PostBookTask postBookTask = new PostBookTask();
-                    postBookTask.execute(isbn);
+                    postBookTask.execute(url);*/
 
+                     // "http://URL_SERVEUR/copies/last.json?student=getSessionStudent().getId()"
                     GetLastCopyTask GetLastCopyTask = new GetLastCopyTask();
-                    // Les parametres de cet appel sont amenés à changer plus tard
-                    GetLastCopyTask.execute();*/
+                    // On récupère la dernière copie ajouter à la liste de l'étudiant afin
+                    // de mettre à jour les données affichées à l'écran.
+                    GetLastCopyTask.execute(HttpUtils.SERVER_URL + HttpUtils.LAST_COPIE + "?"
+                    + HttpUtils.STUDENT + getSessionStudent().getId());
                 }
             }
         });
@@ -282,8 +284,7 @@ public class StudentActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             // On envoie la requête de dépôt de livre au serveur
             // Params[0] : url
-            // param[1] : paramètres de la requête
-            new BookHttpClient().sendPost(params[0], params[1]);
+            new BookHttpClient().sendGet(params[0]);
 
             return null;
         }
