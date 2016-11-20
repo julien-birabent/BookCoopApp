@@ -14,11 +14,13 @@ public class HttpUtils {
     // Ex pour récup un book associé à une copie : books/5807184ec8bf97325a533ff7.json
     //On peut maintenant ajouter un livre en faisant /books/add?isbn=*ISBN*
     public final static String BOOK = "book/";
+    public final static String BOOKS = "books/";
 
     public final static String STUDENT_PARAM ="student_email=";
     public final static String MANAGER_PARAM ="coopmanager_email=";
     public final static String STUDENT_TOKEN_PARAM ="student_token=";
     public final static String MANAGER_TOKEN_PARAM ="coopmanager_token=";
+    public final static String STUDENT = "student=";
 
     public final static String AND = "&";
     public final static String JSON = ".json";

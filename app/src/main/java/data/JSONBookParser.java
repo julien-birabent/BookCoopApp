@@ -45,7 +45,7 @@ public class JSONBookParser {
             book.setIsbn(JSONUtils.getString(ISBN,objBook));
             book.setNbPages(JSONUtils.getString(PAGE_COUNT,objBook));
             book.setPrice(JSONUtils.getString(MINT_PRICE,objBook));
-
+            // On va chercher l'id du livre
             JSONObject objIdBook = JSONUtils.getObject(BOOK_ID,objBook);
             book.setBookId(JSONUtils.getString(ID,objIdBook));
 

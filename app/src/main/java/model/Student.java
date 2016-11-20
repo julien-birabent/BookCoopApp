@@ -11,13 +11,14 @@ public class Student {
     private String email;
     private String password;
     private ArrayList<Book> booksList;
-    private String studentId;
+    private String id;
 
 
 
     public Student(){
         this.email = null;
         this.password = null;
+        this.id = null;
         this.booksList = new ArrayList<Book>();
 
     }
@@ -29,12 +30,19 @@ public class Student {
 
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * Métthode convertissant la liste des livres d'un étduiant en unn ArrayList<String>
      * @return
      */
-    public ArrayList<String> booksListToArrayListOfString(){
+    public ArrayList<String> getBooksDescriptions(){
 
         ArrayList<String> books = new ArrayList<String>();
 

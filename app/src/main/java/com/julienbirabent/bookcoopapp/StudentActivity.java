@@ -27,18 +27,14 @@ import utils.HttpUtils;
 
 public class StudentActivity extends AppCompatActivity {
 
+    // Constantes pour l'utilisation du scanner d'isbn
     public final  int SCANNER_REQUEST_CODE=0;
     public final String SCANNER_MODE = "ONE_D_MODE";
-
-
 
     private ListView booksList;
     private ArrayAdapter<String> bookListAdapter ;
     private ArrayList<String> booksString = new ArrayList<String>();
     private Student sessionStudent;
-
-
-
 
 
     @Override
@@ -65,11 +61,6 @@ public class StudentActivity extends AppCompatActivity {
         sessionStudent.setPassword(intent.getStringExtra(LoginActivity.TOKEN));
 
 
-        // On demande la liste de livres de l'étudiant pour pouvoir initliaser la liste de description
-        // au démarrage de l'activité
-        // GetAllCopiesTask GetAllCopiesTask = new GetAllCopiesTask();
-        //GetAllCopiesTask.execute();
-
         // Définition du bouton flottant permettant de demander l'accès à l'application zxing pour
         // le scan de l'isbn
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -92,7 +83,7 @@ public class StudentActivity extends AppCompatActivity {
      */
     public void fillBookListView(){
 
-        booksString = this.getSessionStudent().booksListToArrayListOfString();
+        booksString = this.getSessionStudent().getBooksDescriptions();
         this.bookListAdapter = new ArrayAdapter<String>(this,R.layout.book_item,booksString);
         this.getBooksList().setAdapter(this.bookListAdapter);
 
@@ -151,27 +142,49 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     /**
-     * Tâche asynchrone pour s'occuper de récupérer le dernier livre ajouté contenu dans la
-     * base de donnée du serveur pour cet étudiant.
+     * Tâche asynchrone pour s'occuper de récupérer la dernière copie de livre ajoutée contenu dans la
+     * base de données du serveur pour cet étudiant.
      */
-    private class GetLastCopyTask extends AsyncTask<String,String,String> {
+    private class GetLastCopyTask extends AsyncTask<String,String,Book> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Book doInBackground(String... params) {
 
             /*
              * Ici on récupère la dernière copie enregistré dans la BD via BookHttpClient et on le convertit en objet physique
              * avec JSONBookParser.
              */
 
-            return null;
+            // Params[0] = "http://URL_SERVEUR/copies/last.json?student=getSessionStudent().getId()"
+            BookHttpClient bookHttpClient = new BookHttpClient();
+            String lastCopyString = bookHttpClient.sendGet(params[0]);
+
+            // On convertit le JSON de la Copy récupérée en objet model.Copy
+            JSONCopyParser jsonCopyParser = new JSONCopyParser();
+            Copy lastCopy = jsonCopyParser.parseCopy(lastCopyString);
+
+            //On récupère le livre associée à cette copie via l'id de livre contenu dans la copie.
+            // URL = http://SERVEUR_URL/books/5807184ec8bf97325a533ff7.json?student=getSessionStudent().getId()
+            String url = HttpUtils.SERVER_URL + HttpUtils.BOOKS + lastCopy.getBookId()
+                    + HttpUtils.JSON + "?" + HttpUtils.STUDENT + getSessionStudent().getId();
+            String lastBookString = bookHttpClient.sendGet(url);
+            // On parse l'objet JSON renvoyé en objet model.Book
+            JSONBookParser jsonBookParser = new JSONBookParser();
+            Book lastBook = jsonBookParser.parseBook(lastBookString);
+            // On associe la copie précédemment récupérée à ce livre
+            lastBook.setCopy(lastCopy);
+
+            return lastBook;
         }
 
         @Override
-        protected void onPostExecute(String data) {
+        protected void onPostExecute(Book book) {
+            super.onPostExecute(book);
+
             // A la fin de l'éxécution, le livre que l'on a récupéré est ajouter à la liste
             // de livres de l'étudiant .
 
+            addBookToListView(book);
 
         }
     }
@@ -191,6 +204,8 @@ public class StudentActivity extends AppCompatActivity {
             // On récupère toutes les copies lié à l'étudiant connecté
             BookHttpClient bookHttpClient = new BookHttpClient();
             String allCopies = bookHttpClient.sendGet(params[0]);
+
+
             // On convertit les Copy format JSON en objet Copy
             JSONCopyParser jsonCopyParser = new JSONCopyParser();
             copiesArrayList = jsonCopyParser.parseManyCopies(allCopies);

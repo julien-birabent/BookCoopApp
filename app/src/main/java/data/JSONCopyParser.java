@@ -38,20 +38,12 @@ public class JSONCopyParser {
             // On convertit la chaîne de caractère représentant l'objet JSON en objet JSON
             JSONObject objCopy = new JSONObject(contents);
 
-           // System.out.println("String brute convertie en JSON" + objCopy.toString());
-
-
             // On récupère l'objet JSON contenant l'id du Book associée à la copy.
             JSONObject objBookId = JSONUtils.getObject(BOOK_ID,objCopy);
-           // System.out.println("JSON contenant book_id : " + objBookId.toString());
 
             // On attribut l'id du Book associé à Copy
             String bookIdString = JSONUtils.getString(ID,objBookId);
-            //System.out.println(bookIdString);
             copy.setBookId(bookIdString);
-            //System.out.println(" id contenu dans book_id : " + copy.getBookId());
-
-
 
             // On récupère l'objet JSON contenant l'id de la Copy
             JSONObject objCopyId = JSONUtils.getObject(COPY_ID,objCopy);

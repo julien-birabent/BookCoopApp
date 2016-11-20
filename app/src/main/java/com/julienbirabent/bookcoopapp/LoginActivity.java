@@ -42,11 +42,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // On créé la chaîne de caractère qui va contenir les paramètres de la requête serveur
-                String params = buildAthentificationUrl();
                 // On lance une tâche asynchrone pour effectuer la requête serveur
+                // avec l'url de login créé à partir des paramètres du client.
                 LoginTask loginTask = new LoginTask();
-                loginTask.execute(new String[]{HttpUtils.SERVER_URL+params});
+                loginTask.execute(new String[]{buildAthentificationUrl()});
 
             }
         });
@@ -63,16 +62,23 @@ public class LoginActivity extends AppCompatActivity {
         String token = getToken().getText().toString();
 
         // On créé la chaîne de caractère qui va contenir les paramètres de la requête serveur
-        String params ="?"+ HttpUtils.STUDENT_PARAM + userName +
+        String url = HttpUtils.SERVER_URL + "?"+ HttpUtils.STUDENT_PARAM + userName +
                 HttpUtils.AND + HttpUtils.STUDENT_TOKEN_PARAM + token;
-        return params;
+        return url;
     }
 
+    /**
+     * Méthode privée pour byPass le screen d'authentification.
+     */
     private void testGoToStudentActivity(){
         Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * On récupère les composants identifiés dans le layout de l'activité et on les associe aux objets
+     * correspondant
+     */
     private void getViewsById(){
         signInButton = (Button)findViewById(R.id.signinButton);
         userName = (EditText) findViewById(R.id.usernameId);
@@ -80,6 +86,9 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Classe interne ayant pour but de gérer la requête d'authentification au serveur.
+     */
     private class LoginTask extends AsyncTask<String,String,String>{
 
         @Override
