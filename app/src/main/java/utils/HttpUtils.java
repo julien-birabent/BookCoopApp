@@ -16,6 +16,8 @@ public class HttpUtils {
     public final static String BOOK = "book/";
     public final static String BOOKS = "books/";
 
+    public final static String COPIES = "copies/";
+
     public final static String STUDENT_PARAM ="student_email=";
     public final static String MANAGER_PARAM ="coopmanager_email=";
     public final static String STUDENT_TOKEN_PARAM ="student_token=";

@@ -238,6 +238,7 @@ public class StudentActivity extends AppCompatActivity {
             JSONBookParser jsonBookParser = new JSONBookParser();
             // On récupère toutes les copies lié à l'étudiant connecté
             BookHttpClient bookHttpClient = new BookHttpClient();
+            // http://URL_SERVER:3000/copies.json?student=getStudentSession().getId()
             String allCopies = bookHttpClient.sendGet(params[0]);
 
 
