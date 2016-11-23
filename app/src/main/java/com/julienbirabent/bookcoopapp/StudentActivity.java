@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,15 +32,14 @@ public class StudentActivity extends AppCompatActivity {
     // Constantes pour l'utilisation du scanner d'isbn
     public final  int SCANNER_REQUEST_CODE=0;
     public final String SCANNER_MODE = "ONE_D_MODE";
-    public String lastIsbn =null;
 
+    // La liste d'interface contenant les description des copies
     private ListView booksList;
+    private Button refreshButton;
     private ArrayAdapter<String> bookListAdapter ;
-    private ArrayList<String> booksString = new ArrayList<String>();
+    private ArrayList<String> copiesDescription = new ArrayList<String>();
+    // L'étudiant connecté à l'application
     private Student sessionStudent;
-
-    private  AddCopyDialog addCopyDialog = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +49,21 @@ public class StudentActivity extends AppCompatActivity {
 
     }
 
-    private  AddCopyDialog getAddCopyDialogInstance(){
-        if(addCopyDialog == null){
-            addCopyDialog = new AddCopyDialog(this);
-        }
-        return addCopyDialog;
-    }
-
     /**
      * Méthode instanciant les composants de l'activité.
      */
-    public void initActivity(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        this.booksList = (ListView) findViewById(R.id.listView_books);
+    private  void initActivity(){
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+     //   setSupportActionBar(toolbar);
+        findViewsById();
+        defineStudentSession();
+        setUIListeners();
+    }
 
-        // on récupère les informations de connection de l'étudiant
-        this.sessionStudent = new Student();
-
-        Intent intent = getIntent();
-        sessionStudent.setEmail(intent.getStringExtra(LoginActivity.USER_NAME));
-        sessionStudent.setPassword(intent.getStringExtra(LoginActivity.TOKEN));
-
-
+    /**
+     * Méthode où l'on centralise l'initialisation des listener du UI
+     */
+    private void setUIListeners(){
         // Définition du bouton flottant permettant de demander l'accès à l'application zxing pour
         // le scan de l'isbn
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -84,51 +76,64 @@ public class StudentActivity extends AppCompatActivity {
 
             }
         });
-
-        // Lorsque le client ferme le dialogue, on décide si oui ou non envoie une requête
-        // au serveur
-        getAddCopyDialogInstance().setOnDismissListener(new DialogInterface.OnDismissListener() {
+        // Définition du listener du bouton pour rafrâichir la liste de livre
+        refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
-                // Si le dialogue s'est terminé car le client à appuyer sur le boutton de confirmation
-                if(getAddCopyDialogInstance().isComplete()){
-                    // On reset le flag du dialogue
-                    getAddCopyDialogInstance().setComplete(false);
-                    System.out.println("Price : " + getAddCopyDialogInstance().getPrice());
-                    // On récupère les paramètres importants du dialogue qui vont servir à construire
-                    // la requête serveur
-                    String price =  getAddCopyDialogInstance().getPrice();
-                    String integrity = getAddCopyDialogInstance().getIntegrity();
-                    // On construit l'url permettant d'ajouter la copie à la liste de l'étudiant
-                    String url = HttpUtils.SERVER_URL +"/add?isbn="+ getLastIsbn()
-                            + "&mint_price="+ price +"&integrity="+ integrity
-                            + "&student"+ getSessionStudent().getId();
+            public void onClick(View v) {
+                //On envoie une requête au serveur demandant la liste complète des copies
+                // pour l'étudiant connecté.
+                getAllCopies();
 
-                  /*  PostBookTask postBookTask = new PostBookTask();
-                    postBookTask.execute(url);*/
-
-                     // "http://URL_SERVEUR/copies/last.json?student=getSessionStudent().getId()"
-                    GetLastCopyTask GetLastCopyTask = new GetLastCopyTask();
-                    // On récupère la dernière copie ajouter à la liste de l'étudiant afin
-                    // de mettre à jour les données affichées à l'écran.
-                    GetLastCopyTask.execute(HttpUtils.SERVER_URL + HttpUtils.LAST_COPIE + "?"
-                    + HttpUtils.STUDENT + getSessionStudent().getId());
-                }
             }
         });
+    }
 
+    /**
+     * Méthode ou l'on centralise la récupération des vues
+     */
+    private void findViewsById(){
+        this.booksList = (ListView) findViewById(R.id.listView_books);
+        this.refreshButton = (Button) findViewById(R.id.refresh_button);
+    }
 
+    /**
+     * Méthode où l'on récupère les données de connexion dans un objet Student
+     */
+    private void defineStudentSession(){
+        // on récupère les informations de connection de l'étudiant
+        this.sessionStudent = new Student();
+        Intent intent = getIntent();
+        sessionStudent.setEmail(intent.getStringExtra(LoginActivity.USER_NAME));
+        sessionStudent.setPassword(intent.getStringExtra(LoginActivity.TOKEN));
 
     }
 
     /**
-     * Méthode permettant de mettre à jour la ListView contenant les description de livres
-     * Méthode
+     * Méthode regroupant les instruction nécessaire pour récupérer la liste de copies de l'étudiant
+     * connecté et de l'afficher.
      */
-    public void fillBookListView(){
+    private void getAllCopies(){
+        String url = HttpUtils.SERVER_URL + "copies.json";
+        GetAllCopiesTask getAllCopiesTask = new GetAllCopiesTask();
+        getAllCopiesTask.execute(url);
+    }
 
-        booksString = this.getSessionStudent().getBooksDescriptions();
-        this.bookListAdapter = new ArrayAdapter<String>(this,R.layout.book_item,booksString);
+    /**
+     * Méthode permettant de mettre à jour la ListView contenant les description de livres
+     * Elle reset la listView à chaque appel.
+     */
+    public void fillBookListView(ArrayList<Book> books){
+
+        // On reset notre liste contenant les description d'item à afficher.
+        copiesDescription.clear();
+
+        for(int i = 0; i<books.size();i++){
+
+            copiesDescription.add(books.get(i).toString());
+
+        }
+
+        this.bookListAdapter = new ArrayAdapter<String>(this,R.layout.book_item,copiesDescription);
         this.getBooksList().setAdapter(this.bookListAdapter);
 
     }
@@ -157,15 +162,19 @@ public class StudentActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 // Handle successful scan
                 String isbn = intent.getStringExtra("SCAN_RESULT");
-                setLastIsbn(isbn);
                 String formatName = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
                 Toast.makeText(getApplicationContext(), " ISBN : " + isbn,Toast.LENGTH_LONG).show();
 
                 if(checkInternetConnection()) {
 
-                    // Ici on affiche le dialogue
-                    getAddCopyDialogInstance().show();
+                    // On prépare puis on envoie la requête permettant d'ajouter une copie
+                    // dans la liste de l'étudiant connecté via l'isbn du livre scanné.
+                    String urlPostIsbn = HttpUtils.SERVER_URL + HttpUtils.BOOKS + HttpUtils.ADD
+                            + HttpUtils.ISBN_PARAM + isbn;
+                    PostBookTask postBookTask = new PostBookTask();
+                    postBookTask.execute(urlPostIsbn);
+
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Handle cancel
@@ -190,7 +199,7 @@ public class StudentActivity extends AppCompatActivity {
              * avec JSONBookParser.
              */
 
-            // Params[0] = "http://URL_SERVEUR/copies/last.json?student=getSessionStudent().getId()"
+            // Params[0] = "http://URL_SERVEUR/copies/last.json
             BookHttpClient bookHttpClient = new BookHttpClient();
             String lastCopyString = bookHttpClient.sendGet(params[0]);
 
@@ -199,15 +208,18 @@ public class StudentActivity extends AppCompatActivity {
             Copy lastCopy = jsonCopyParser.parseCopy(lastCopyString);
 
             //On récupère le livre associée à cette copie via l'id de livre contenu dans la copie.
-            // URL = http://SERVEUR_URL/books/5807184ec8bf97325a533ff7.json?student=getSessionStudent().getId()
+            // URL = http://SERVEUR_URL/books/5807184ec8bf97325a533ff7.json
             String url = HttpUtils.SERVER_URL + HttpUtils.BOOKS + lastCopy.getBookId()
-                    + HttpUtils.JSON + "?" + HttpUtils.STUDENT + getSessionStudent().getId();
+                    + HttpUtils.JSON ;
+
             String lastBookString = bookHttpClient.sendGet(url);
             // On parse l'objet JSON renvoyé en objet model.Book
             JSONBookParser jsonBookParser = new JSONBookParser();
             Book lastBook = jsonBookParser.parseBook(lastBookString);
             // On associe la copie précédemment récupérée à ce livre
             lastBook.setCopy(lastCopy);
+            // Debug
+            System.out.println("Last book fetched : " + lastBook.toString());
 
             return lastBook;
         }
@@ -238,7 +250,7 @@ public class StudentActivity extends AppCompatActivity {
             JSONBookParser jsonBookParser = new JSONBookParser();
             // On récupère toutes les copies lié à l'étudiant connecté
             BookHttpClient bookHttpClient = new BookHttpClient();
-            // http://URL_SERVER:3000/copies.json?student=getStudentSession().getId()
+            // http://URL_SERVER:3000/copies.json
             String allCopies = bookHttpClient.sendGet(params[0]);
 
 
@@ -248,7 +260,7 @@ public class StudentActivity extends AppCompatActivity {
             // Pour chaque copie, on fait une requête dans la BD pour trouver le Book associé
             // On convertit la description JSON du Book en objet Book et on associe la Copy à ce Book
             for(int i= 0 ;i<copiesArrayList.size();i++){
-                String stringBook = bookHttpClient.sendGet(HttpUtils.SERVER_URL + HttpUtils.BOOK
+                String stringBook = bookHttpClient.sendGet(HttpUtils.SERVER_URL + HttpUtils.BOOKS
                 + copiesArrayList.get(i).getBookId() + HttpUtils.JSON);
 
                 Book book = jsonBookParser.parseBook(stringBook);
@@ -268,7 +280,7 @@ public class StudentActivity extends AppCompatActivity {
                 getSessionStudent().setBooksList(books);
             }
             // On remplis et on affiche les descriptions de livres.
-            fillBookListView();
+            fillBookListView(getSessionStudent().getBooksList());
         }
     }
 
@@ -332,11 +344,11 @@ public class StudentActivity extends AppCompatActivity {
         this.bookListAdapter = bookListAdapter;
     }
 
-    public String getLastIsbn() {
-        return lastIsbn;
+    public ArrayList<String> getCopiesDescription() {
+        return copiesDescription;
     }
 
-    public void setLastIsbn(String lastIsbn) {
-        this.lastIsbn = lastIsbn;
+    public void setCopiesDescription(ArrayList<String> copiesDescription) {
+        this.copiesDescription = copiesDescription;
     }
 }

@@ -29,10 +29,19 @@
         android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/refresh_button"
+        android:layout_below="@id/text_booksList"
+        android:layout_width="200dp"
+        android:layout_centerHorizontal="true"
+        android:text="Refresh list"
+        android:textAllCaps="false"
+        android:layout_height="wrap_content" />
+
     <ListView
         android:id="@+id/listView_books"
         android:scrollbars="vertical"
-        android:layout_below="@id/text_booksList"
+        android:layout_below="@id/refresh_button"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

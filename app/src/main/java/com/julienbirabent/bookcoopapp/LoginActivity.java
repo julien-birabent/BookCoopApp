@@ -19,7 +19,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public final static String USER_NAME = "user_name";
     public final static String TOKEN = "token";
-    public final static String STUDENT_ID = "student_id";
     public final static String CODE_VALID ="200";
 
     private Button signInButton;
@@ -42,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                testGoToStudentActivity();
                 // On lance une tâche asynchrone pour effectuer la requête serveur
                 // avec l'url de login créé à partir des paramètres du client.
                 LoginTask loginTask = new LoginTask();

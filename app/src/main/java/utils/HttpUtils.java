@@ -27,6 +27,9 @@ public class HttpUtils {
     public final static String AND = "&";
     public final static String JSON = ".json";
 
+    public final static String ADD = "add?";
+    public final static String ISBN_PARAM = "isbn=";
+
 
 
 }
