@@ -19,7 +19,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public final static String USER_NAME = "user_name";
     public final static String TOKEN = "token";
-    public final static String CODE_VALID ="200";
+    public final static int CODE_VALID =200;
+    public final static int CODE_INVALID =400;
 
     private Button signInButton;
     private EditText userName;
@@ -120,9 +121,11 @@ public class LoginActivity extends AppCompatActivity {
 
             super.onPostExecute(s);
 
+            int responseCode = Integer.parseInt(s);
+
             Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
             // Si la réponse du serveur nous autorise, on passe à l'activité suivante
-           if(s.equals(CODE_VALID)){
+           if(responseCode >= CODE_VALID || responseCode < CODE_INVALID ){
                 Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
                 intent.putExtra(USER_NAME, userName.getText().toString());
                 intent.putExtra(TOKEN,token.getText().toString());
