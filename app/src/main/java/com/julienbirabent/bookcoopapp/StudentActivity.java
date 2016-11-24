@@ -170,6 +170,8 @@ public class StudentActivity extends AppCompatActivity {
 
                     // On prépare puis on envoie la requête permettant d'ajouter une copie
                     // dans la liste de l'étudiant connecté via l'isbn du livre scanné.
+
+                    // /books/add?isbn=*ISBN*
                     String urlPostIsbn = HttpUtils.SERVER_URL + HttpUtils.BOOKS + HttpUtils.ADD
                             + HttpUtils.ISBN_PARAM + isbn;
                     PostBookTask postBookTask = new PostBookTask();
@@ -297,7 +299,9 @@ public class StudentActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             // On envoie la requête de dépôt de livre au serveur
             // Params[0] : url
-            new BookHttpClient().sendGet(params[0]);
+            BookHttpClient bookHttpClient =  new BookHttpClient();
+            String reponse = bookHttpClient.sendGet(params[0]);
+            System.out.println(" Response code for posting isbn  :" +  reponse);
 
             return null;
         }
